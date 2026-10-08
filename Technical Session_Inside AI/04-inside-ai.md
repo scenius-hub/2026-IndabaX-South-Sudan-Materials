@@ -21,7 +21,6 @@ Most participants had already used AI that morning: Google Maps traffic, face un
 | Recommend          | Personalised lessons; match young people with jobs and training                                          | Education, jobs       |
 | Create             | Learning materials and radio content in local languages                                                  | Education, media      |
 
-The session's framing: the question is not whether AI will reach South Sudan, but who will build it.
 
 ## How machines learn
 
@@ -35,7 +34,9 @@ The session framed ML around three components:
 
 - **Learning** — tuning those knobs to shrink a loss function, L(f(x), y), which measures the gap between prediction and reality.
 
-\min\_{\theta} \sum\_{(x,y) \in X} L\big(f(x;\theta),\\ y\big)
+$$
+\min_{\theta} \sum_{(x,y) \in X} L\big(f(x;\theta),\, y\big)
+$$
 
 In practice, training is a loop: guess, measure the error, adjust, repeat thousands of times. Some data is held back as "secret exam questions", because the real goal is generalisation: working on a farm or a season the model has never seen.
 
@@ -58,13 +59,15 @@ import pandas as pd
 from sklearn.model_selection import train_test_split  
 from sklearn.ensemble import RandomForestRegressor  
   
-X = data\[\["rainfall_mm", "temperature_c", "fertiliser_kg"\]\]  
-y = data\["yield_tonnes"\]  
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)  
-  
-model = RandomForestRegressor()  
-model.fit(X_train, y_train) \# learning happens here  
-predictions = model.predict(X_test) \# test on unseen farms
+```python
+X = data[["rainfall_mm", "temperature_c", "fertiliser_kg"]]
+y = data["yield_tonnes"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+model = RandomForestRegressor()
+model.fit(X_train, y_train)          # learning happens here
+predictions = model.predict(X_test)  # test on unseen farms
+```
 
 The four steps map straight onto the theory: load data, split into train and test, train with fit, then test and predict on farms the model has never seen. The notebook is open to anyone: [crop yield demo in Colab](https://colab.research.google.com/drive/1XMYuu7cs6XB_zECGxzSbY4Movc78N_MM?usp=sharing).
 
