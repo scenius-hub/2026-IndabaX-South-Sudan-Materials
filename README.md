@@ -74,11 +74,17 @@ The day also celebrated the hackathon participants. **Final winners will be anno
 
 ```
 .
-├── articles/     Event recap and one article per session
-├── workshop/     Hands-on ML workshop notebook (Google Colab)
-├── hackathon/    Hackathon challenge overview
-├── slides/       Session slides
-└── resources/    Free courses and tools to keep learning
+├── ML Workshop/                       Hands-on ML workshop
+│   └── ML_Hands_On_Workshop_IndabaX_SS_2026 (2).ipynb
+└── Start Now/                         Start Now slides
+├── Technical Session_Inside AI/       Inside AI session
+│   ├── 04-inside-ai.md
+│   └── Inside AI — IndabaX South Sudan 2026.pdf
+├── 01-event-recap.md                  Event recap
+├── 03-ai-in-banking.md                AI in Banking session
+├── 05-start-now.md                    Start Now session
+├── 06-founders-panel.md               Founders panel
+├── README.md
 ```
 
 | Session | Speaker(s) | Article | Materials |
@@ -89,7 +95,7 @@ The day also celebrated the hackathon participants. **Final winners will be anno
 | Inside AI: How It Works, What It Can Do, and Where It Falls Short | Poni Henry | [Read](<Technical Session_Inside AI/04-inside-ai.md>) | [Slides](<Technical Session_Inside AI/Inside AI — IndabaX South Sudan 2026.pdf>) · [Colab demo](https://colab.research.google.com/drive/1XMYuu7cs6XB_zECGxzSbY4Movc78N_MM?usp=sharing) |
 | Start Now: Building AI and ML Skills as a Student | Chol Daniel Deng Dau | [Read](05-start-now.md) | [Slides](<Start Now>) |
 | Founders panel: Building for First-Time Users | Gaso Grace Pascal (moderator), Nelson Kwaje, John Marit, Johnson Achuk | [Read](06-founders-panel.md) | — |
-**New to machine learning?** Open the [workshop notebook](ML Workshop/) in Google Colab and run it from top to bottom. You only need a browser and a Google account.
+**New to machine learning?** Open the [workshop folder](<ML Workshop/>) and in Google Colab run it from top to bottom. You only need a browser and a Google account.
 
 ## What's next
 
