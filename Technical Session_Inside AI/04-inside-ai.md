@@ -55,11 +55,11 @@ Transfer learning got special emphasis: it lets South Sudan adapt large global m
 
 The theory became real in a few lines of Python in Google Colab. Participants watched a random forest learn to predict a farm's yield in tonnes from rainfall, temperature and fertiliser use, the same agriculture and food-security theme as the IndabaX hackathon.
 
+```python
 import pandas as pd  
 from sklearn.model_selection import train_test_split  
-from sklearn.ensemble import RandomForestRegressor  
-  
-```python
+from sklearn.ensemble import RandomForestRegressor
+
 X = data[["rainfall_mm", "temperature_c", "fertiliser_kg"]]
 y = data["yield_tonnes"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
