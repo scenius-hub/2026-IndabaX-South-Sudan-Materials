@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outsmart the AI | IndabaX South Sudan 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* South Sudan flag colours */
+    --black:#000; --red:#DA121A; --green:#078930; --blue:#0F47AF; --gold:#FCDD09; --white:#fff;
+    --bg:#F3F5FA; --ink:#1A1C22; --muted:#5B6275; --line:#DCE1EC;
+    --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+    --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--body); font-size:18px; line-height:1.5; }
+
+  /* Flag band */
+  .flag { height:18px; position:relative;
+    background:linear-gradient(to bottom, var(--black) 0 31%, var(--white) 31% 35%, var(--red) 35% 65%,
+                               var(--white) 65% 69%, var(--green) 69% 100%); }
+  .flag::before { content:""; position:absolute; left:0; top:0; height:100%; width:64px;
+    background:var(--blue); clip-path:polygon(0 0, 100% 50%, 0 100%); }
+
+  header { max-width:1180px; margin:0 auto; padding:28px 24px 8px; display:flex; align-items:center; gap:18px; }
+  #logo { height:64px; width:auto; }
+  h1 { font-family:var(--display); font-weight:800; font-size:clamp(2rem,4vw,3.2rem); line-height:1; margin:0; letter-spacing:-.02em; }
+  .event { margin-top:8px; color:var(--muted); font-weight:700; display:flex; align-items:center; gap:8px; }
+  .badge { width:26px; height:26px; border-radius:6px; background:var(--blue); color:var(--gold);
+           display:grid; place-items:center; font-size:15px; }
+
+  main { max-width:1180px; margin:0 auto; padding:16px 24px 48px; display:grid;
+         grid-template-columns:minmax(0,1fr) 320px; gap:24px; align-items:start; }
+  @media (max-width:860px) { main { grid-template-columns:1fr; } }
+  .panel { background:#fff; border:1px solid var(--line); border-radius:18px; padding:24px; }
+  h2 { font-family:var(--display); font-weight:800; font-size:1.6rem; margin:0 0 6px; }
+  p { margin:0 0 12px; }
+  .muted { color:var(--muted); }
+
+  /* Stage: who is playing + level steps */
+  .stage { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+           padding-bottom:18px; margin-bottom:20px; border-bottom:1px solid var(--line); }
+  .now-playing { font-family:var(--display); font-size:1.6rem; font-weight:800; line-height:1.2; }
+  .now-playing small { display:block; font-family:var(--body); font-size:.9rem; font-weight:400; color:var(--muted); }
+  .steps { display:flex; gap:8px; list-style:none; margin:0; padding:0; flex-wrap:wrap; }
+  .steps li { display:flex; align-items:center; gap:8px; padding:6px 14px 6px 6px; border-radius:999px;
+              background:var(--bg); color:var(--muted); font-weight:700; font-size:.95rem; }
+  .steps .n { width:28px; height:28px; border-radius:50%; display:grid; place-items:center;
+              background:#fff; border:2px solid var(--line); }
+  .steps li.now { background:var(--blue); color:#fff; }
+  .steps li.now .n { background:var(--gold); border-color:var(--gold); color:#000; }
+  .steps li.done .n { background:var(--green); border-color:var(--green); color:#fff; }
+
+  /* Buttons and inputs */
+  button { font:inherit; font-weight:700; border-radius:12px; padding:12px 20px; cursor:pointer; border:2px solid transparent; }
+  .primary { background:var(--blue); color:#fff; }
+  .primary:hover { background:#0B3A91; }
+  .secondary { background:#fff; color:var(--ink); border-color:var(--line); }
+  .secondary:hover { border-color:var(--blue); }
+  .danger { background:#fff; color:var(--red); border-color:#F3C2C4; }
+  button:disabled { opacity:.45; cursor:wait; }
+  :focus-visible { outline:3px solid var(--black); outline-offset:2px; }
+  label { display:block; font-weight:700; margin-bottom:6px; }
+  input { width:100%; font:inherit; padding:14px 16px; border:2px solid var(--line); border-radius:12px; background:#fff; color:var(--ink); }
+  input:focus { border-color:var(--blue); outline:none; }
+
+  /* Setup */
+  .teams-in { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px 0 22px; }
+  @media (max-width:600px) { .teams-in { grid-template-columns:1fr; } }
+
+  /* Category picker */
+  .cats { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px; margin-top:14px; }
+  .cat { background:#fff; border:2px solid var(--line); padding:20px 18px; text-align:left; font-size:1.05rem; }
+  .cat:hover { border-color:var(--blue); color:var(--blue); }
+
+  /* Game */
+  .riddle { background:var(--blue); color:#fff; border-radius:16px; padding:22px 24px; font-size:1.35rem; line-height:1.45; white-space:pre-line; }
+  .riddle .label { display:block; font-size:.9rem; font-weight:700; color:var(--gold); margin-bottom:6px; white-space:normal; }
+  .qbar { display:flex; align-items:center; gap:14px; margin:18px 0 10px; color:var(--muted); flex-wrap:wrap; }
+  .dots { display:flex; gap:6px; flex-wrap:wrap; }
+  .dot { width:14px; height:14px; border-radius:50%; background:var(--blue); }
+  .dot.used { background:var(--line); }
+  .log { border:1px solid var(--line); border-radius:14px; padding:4px 16px; height:250px; overflow-y:auto; background:#FAFBFD; }
+  .msg { padding:10px 0; border-bottom:1px solid var(--line); }
+  .msg:last-child { border-bottom:0; }
+  .msg .q { font-weight:700; color:var(--blue); }
+  .msg .a { white-space:pre-line; }
+  .msg.sys .a { color:var(--muted); }
+  .ask { display:flex; gap:10px; margin-top:14px; }
+  .tools { display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
+
+  .result { margin-top:18px; border-radius:16px; padding:20px 22px; color:#fff; }
+  .result.win { background:var(--green); }
+  .result.lose { background:var(--red); }
+  .result h3 { font-family:var(--display); font-size:1.7rem; margin:0 0 4px; }
+  .explain { background:#fff; color:var(--ink); border-radius:12px; padding:14px 16px; margin-top:14px; }
+  .next { margin-top:16px; }
+
+  /* Final */
+  .podium { list-style:none; padding:0; margin:18px 0; display:grid; gap:10px; }
+  .podium li { display:flex; justify-content:space-between; gap:12px; padding:14px 18px; border-radius:14px;
+               border:2px solid var(--line); font-size:1.2rem; font-weight:700; }
+  .podium li:first-child { border-color:var(--gold); background:#FFFBE0; }
+
+  /* Leaderboard */
+  aside h2 { font-size:1.4rem; margin-bottom:14px; }
+  .board { list-style:none; margin:0; padding:0; display:grid; gap:10px; }
+  .board li { display:grid; grid-template-columns:38px 1fr auto; align-items:center; gap:12px;
+              padding:12px 14px; border:2px solid var(--line); border-radius:14px; background:#fff; }
+  .board li.empty { display:block; color:var(--muted); border-style:dashed; }
+  .board li.playing { border-color:var(--blue); }
+  .rank { width:38px; height:38px; border-radius:50%; display:grid; place-items:center; font-weight:800; background:var(--bg); }
+  .board li.lead .rank { background:var(--gold); color:#000; }
+  .tname { font-weight:700; overflow-wrap:anywhere; line-height:1.25; }
+  .tag { display:block; font-size:.8rem; color:var(--blue); }
+  .pts { font-family:var(--display); font-size:1.9rem; font-weight:800; }
+  .rules { margin-top:20px; padding-top:16px; border-top:1px solid var(--line); font-size:.92rem; color:var(--muted); }
+  .rules p { margin:0 0 4px; }
+
+  .hidden { display:none !important; }
+</style>
+</head>
+<body>
+<div class="flag" aria-hidden="true"></div>
+
+<header>
+  <img id="logo" src="/logo.png" alt="IndabaX South Sudan logo" onerror="this.remove()">
+  <div>
+    <h1>Outsmart the AI</h1>
+    <div class="event"><span class="badge" aria-hidden="true">★</span>IndabaX South Sudan 2026</div>
+  </div>
+</header>
+
+<main>
+  <section class="panel">
+    <div class="stage hidden" id="stage">
+      <div class="now-playing" id="nowPlaying"></div>
+      <ol class="steps" id="steps"></ol>
+    </div>
+
+    <div id="setup">
+      <h2>Set up your teams</h2>
+      <p class="muted">Two rounds. In each round, every team plays Beginner, then Intermediate, then Advanced. Each team uses every category once. Solve the AI's riddle with yes/no questions.</p>      <div class="teams-in">
+        <div><label for="t0">Team 1</label><input id="t0" value="Team 1"></div>
+        <div><label for="t1">Team 2</label><input id="t1" value="Team 2"></div>
+        <div><label for="t2">Team 3</label><input id="t2" value="Team 3"></div>
+      </div>
+      <button class="primary" id="startBtn">Start the game</button>
+    </div>
+
+    <div id="pick" class="hidden">
+      <h2 id="pickTitle"></h2>
+      <p class="muted" id="pickSub"></p>
+      <div class="cats" id="cats"></div>
+    </div>
+
+    <div id="game" class="hidden">
+      <div class="riddle" id="riddle"></div>
+      <div class="qbar"><div class="dots" id="dots"></div><span id="leftText"></span></div>
+      <div class="log" id="log" aria-live="polite"></div>
+      <div id="controls">
+        <div class="ask">
+          <input id="q" placeholder="Ask a yes/no question, e.g. Is it used on a phone?" autocomplete="off" aria-label="Your question">
+          <button class="primary" id="askBtn">Ask</button>
+        </div>
+        <div class="tools">
+          <button class="secondary" id="hintBtn">💡 Hint (uses 2 questions)</button>
+          <button class="danger" id="giveBtn">Give up</button>
+        </div>
+      </div>
+      <div id="result" class="result hidden">
+        <h3 id="resultTitle"></h3>
+        <div id="resultPts"></div>
+        <div class="explain hidden" id="explain"></div>
+      </div>
+      <button class="primary next hidden" id="nextBtn"></button>
+    </div>
+
+    <div id="final" class="hidden">
+      <h2 id="finalTitle"></h2>
+      <p class="muted" id="finalSub"></p>
+      <ol class="podium" id="podium"></ol>
+      <div class="tools">
+        <button class="primary" id="againBtn">Play another round</button>
+        <button class="secondary" id="resetBtn">New game</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <h2>Leaderboard</h2>
+    <ol class="board" id="board"><li class="empty">Scores appear when the game starts.</li></ol>
+    <div class="rules">
+      <p><b>Scoring</b></p>
+      <p>Beginner 10 points, Intermediate 20, Advanced 30.</p>
+      <p>Plus 1 bonus point for every question left.</p>
+    </div>
+  </aside>
+</main>
+<script>
+const CATS = ["AI & ML Concepts","Famous Tech Tools","Jobs & Careers","AI in Everyday Life","South Sudan","Animals"];
+const LEVELS = ["", "Beginner", "Intermediate", "Advanced"];
+const ROUNDS = 2;   // each round = Beginner, Intermediate, Advanced (2 rounds = 6 turns = 6 categories)
+const REDUCE = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let teams = [], turn = 0, level = 1, round = 1, gameId = null, maxQ = 10, playing = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+function show(id) {
+  ["setup","pick","game","final"].forEach(s => $(s).classList.toggle("hidden", s !== id));
+  $("stage").classList.toggle("hidden", id === "setup");
+}
+
+async function post(url, body) {
+  try {
+    const r = await fetch(url, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+    return await r.json();
+  } catch (e) {
+    return {error: "Can't reach the game server. Check that app.py is running."};
+  }
+}
+
+function busy(on) { ["askBtn","hintBtn","giveBtn","q"].forEach(id => $(id).disabled = on); }
+
+function log(q, a, cls) {
+  const div = document.createElement("div");
+  div.className = "msg" + (cls ? " " + cls : "");
+  div.innerHTML = (q ? `<div class="q">${esc(q)}</div>` : "") + `<div class="a">${esc(a)}</div>`;
+  $("log").appendChild(div);
+  $("log").scrollTop = $("log").scrollHeight;
+}
+
+function renderStage() {
+  const t = playing !== null ? teams[playing] : null;
+  $("nowPlaying").innerHTML = t
+    ? `<small>Round ${round} of ${ROUNDS}, ${LEVELS[level]} level. Now playing</small>${esc(t.name)}`
+    : `<small>Game over</small>Final results`;
+  $("steps").innerHTML = [1,2,3].map(l => {
+    const s = (playing === null || level > l) ? "done" : level === l ? "now" : "";
+    return `<li class="${s}"><span class="n">${s === "done" ? "✓" : l}</span>${LEVELS[l]}</li>`;
+  }).join("");
+}
+
+// Leaderboard re-sorts by score and slides teams into their new places
+function renderBoard() {
+  const list = $("board");
+  if (!teams.length) { list.innerHTML = '<li class="empty">Scores appear when the game starts.</li>'; return; }
+  const before = {};
+  list.querySelectorAll("li[data-id]").forEach(li => before[li.dataset.id] = li.getBoundingClientRect().top);
+  const ranked = [...teams].sort((a, b) => b.score - a.score || a.id - b.id);
+  list.innerHTML = ranked.map((t, i) => `
+    <li data-id="${t.id}" class="${t.id === playing ? "playing" : ""} ${i === 0 && t.score > 0 ? "lead" : ""}">
+      <span class="rank">${i + 1}</span>
+      <span class="tname">${esc(t.name)}${t.id === playing ? '<span class="tag">Playing now</span>' : ""}</span>
+      <span class="pts">${t.score}</span>
+    </li>`).join("");
+  if (REDUCE) return;
+  list.querySelectorAll("li[data-id]").forEach(li => {
+    const old = before[li.dataset.id];
+    if (old === undefined) return;
+    const dy = old - li.getBoundingClientRect().top;
+    if (dy) li.animate([{ transform:`translateY(${dy}px)` }, { transform:"none" }],
+                       { duration:600, easing:"cubic-bezier(.2,.8,.2,1)" });
+  });
+}
+
+function renderDots(left) {
+  $("dots").innerHTML = Array.from({ length:maxQ }, (_, i) => `<span class="dot${i >= left ? " used" : ""}"></span>`).join("");
+  $("leftText").textContent = `${left} question${left === 1 ? "" : "s"} left`;
+}
+
+function showNext(label, fn) {
+  $("nextBtn").textContent = label; $("nextBtn").onclick = fn; $("nextBtn").classList.remove("hidden");
+}
+
+// Category buttons: a team can use each category only once in the whole game
+function renderCats() {
+  const usedByTeam = teams[turn].used;
+  $("cats").innerHTML = "";
+  CATS.forEach(c => {
+    const b = document.createElement("button");
+    const taken = usedByTeam.includes(c);
+    b.className = "cat" + (taken ? " taken" : "");
+    b.disabled = taken;
+    b.innerHTML = esc(c) + (taken ? '<span class="used-tag">Already used</span>' : "");
+    if (!taken) b.onclick = () => start(c);
+    $("cats").appendChild(b);
+  });
+}
+
+function toPick() {
+  playing = turn;
+  renderStage(); renderBoard(); renderCats();
+  const left = CATS.length - teams[turn].used.length;
+  $("pickTitle").textContent = `${teams[turn].name}, choose a category`;
+  $("pickSub").textContent = `Round ${round} of ${ROUNDS}, ${LEVELS[level]} level. ` +
+    `Each category can be used once per team (${left} left).`;
+  show("pick");
+}
+
+function newGame() {
+  teams.forEach(t => { t.score = 0; t.used = []; });
+  turn = 0; level = 1; round = 1;
+  toPick();
+}
+
+$("startBtn").onclick = () => {
+  teams = [0,1,2].map(i => ({ id:i, name:$("t" + i).value.trim() || `Team ${i + 1}`, score:0, used:[] }));
+  newGame();
+};
+
+async function start(cat) {
+  show("game");
+  $("result").className = "result hidden";
+  $("nextBtn").classList.add("hidden");
+  $("controls").classList.remove("hidden");
+  $("log").innerHTML = ""; $("dots").innerHTML = ""; $("leftText").textContent = "";
+  const label = `<span class="label">${LEVELS[level]} level: ${esc(cat)}</span>`;
+  $("riddle").innerHTML = label + "Thinking of something sneaky...";
+  busy(true);
+  const d = await post("/new", { category:cat, level });
+  if (d.error) {
+    $("riddle").innerHTML = label + esc(d.error);
+    $("controls").classList.add("hidden");
+    return showNext("Choose a category again", toPick);
+  }
+  teams[turn].used.push(cat);   // only counts once the riddle has loaded
+  gameId = d.id; maxQ = d.left;
+  $("riddle").innerHTML = label + esc(d.riddle);
+  renderDots(d.left);
+  log(null, "Ask your yes/no questions to solve the riddle.", "sys");
+  busy(false); $("q").focus();
+}
+
+async function ask() {
+  const q = $("q").value.trim(); if (!q || !gameId) return;
+  $("q").value = ""; busy(true);
+  const d = await post("/ask", { id:gameId, question:q });
+  if (d.error) { busy(false); return log(q, d.error, "sys"); }
+  log(q, d.answer); renderDots(d.left);
+  if (d.won || d.lost) finish(d); else { busy(false); $("q").focus(); }
+}
+
+async function hint() {
+  busy(true);
+  const d = await post("/hint", { id:gameId });
+  busy(false);
+  log(null, d.error || d.answer, "sys");
+  if (!d.error) renderDots(d.left);
+}
+
+async function giveUp() {
+  if (!gameId || !confirm("Give up this riddle? The team gets 0 points.")) return;
+  busy(true);
+  const d = await post("/giveup", { id:gameId });
+  if (d.error) { busy(false); return log(null, d.error, "sys"); }
+  finish(d);
+}
+
+function finish(d) {
+  gameId = null;
+  $("controls").classList.add("hidden");
+  const t = teams[turn];
+  if (d.won) t.score += d.points;
+  $("result").className = "result " + (d.won ? "win" : "lose");
+  $("resultTitle").textContent = d.won ? `${t.name} got it!` : "The AI wins this one";
+  $("resultPts").textContent = d.won
+    ? `The answer was ${d.secret}. +${d.points} points`
+    : `The answer was ${d.secret}. No points this time.`;
+  $("explain").textContent = d.explanation || "";
+  $("explain").classList.toggle("hidden", !d.explanation);
+  renderBoard();
+  // Flow: all teams play a level, then move up; after Advanced, start the next round
+  if (turn < teams.length - 1)
+    showNext(`Next up: ${teams[turn + 1].name}`, () => { turn++; toPick(); });
+  else if (level < 3)
+    showNext(`Start the ${LEVELS[level + 1]} level`, () => { level++; turn = 0; toPick(); });
+  else if (round < ROUNDS)
+    showNext(`Start round ${round + 1}`, () => { round++; level = 1; turn = 0; toPick(); });
+  else
+    showNext("See the final results", showFinal);
+}
+
+function showFinal() {
+  playing = null; renderStage(); renderBoard();
+  const ranked = [...teams].sort((a, b) => b.score - a.score || a.id - b.id);
+  const top = ranked[0].score;
+  const winners = ranked.filter(t => t.score === top).map(t => t.name);
+  $("finalTitle").textContent = winners.length > 1 ? `🏆 It's a tie: ${winners.join(" and ")}` : `🏆 ${winners[0]} wins!`;
+  $("finalSub").textContent = `Final scores after ${ROUNDS} rounds.`;
+  $("podium").innerHTML = ranked.map((t, i) => `<li><span>${i + 1}. ${esc(t.name)}</span><span>${t.score} points</span></li>`).join("");
+  show("final");
+}
+
+$("askBtn").onclick = ask;
+$("hintBtn").onclick = hint;
+$("giveBtn").onclick = giveUp;
+$("q").addEventListener("keydown", e => e.key === "Enter" && ask());
+$("againBtn").textContent = "Play again (same teams)";
+$("againBtn").onclick = () => { if (confirm("Play again? Scores and categories will be reset.")) newGame(); };
+$("resetBtn").onclick = () => {
+  if (!confirm("Start a new game? All scores will be reset.")) return;
+  teams = []; playing = null; renderBoard(); show("setup");
+};
+</script>
+
+</body>
+</html>
